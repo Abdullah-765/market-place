@@ -14,7 +14,7 @@ interface latestProductsProps {
   slug: Slug,
   image: string,
   price: number,
-  discountPrice: number,
+  discountPercentage: number,
   description: string,
   stockLevel: number,
   category: string,
@@ -24,7 +24,7 @@ interface latestProductsProps {
 
 
 export default async function LatestProducts() {
-  const query = defineQuery(`*[_type == "latestProducts"] {description, image, price, discountPrice, name, stockLevel, category}`)
+  const query = defineQuery(`*[_type == "latestProducts"] {description, image, price, discountPercentage, name, stockLevel, category}`)
   const featuredProducts = await client.fetch(query)
 
   return (
@@ -33,14 +33,15 @@ export default async function LatestProducts() {
       <h2 className={`${josefinSans.className} mt-6 mb-1 text-center text-[26px] text-[#1A0B5B] font-bold`}>Latest Products</h2>
       <ul className="flex flex-wrap gap-[20px] justify-center lg:mx-[200px]" id="latest-products">
 
-
         {featuredProducts.map((product: latestProductsProps) => (
           <div className="flex items-center justify-center lg:w-[280px] flex-col shadow-sm">
             <img src={urlFor(product.image).url()} alt="" className=" w-[150px] bg-[#F6F7FB] mb-[10px]" />
             <ul className="flex justify-evenly items-center bg-white w-[100%] gap-[4px] ">
-              <h3 className="text-[#151875] font-[600] text-[10px]" >{product.name}</h3>
-              <p className={`${josefinSans.className} text-[#151875] font-[600] text-[10px]`} >{product.price}</p>
-              <p className={`${josefinSans.className} text-[#FB2E86] font-[600] text-[10px] line-through`} >{product.discountPrice}</p>
+              <h3 className="text-[#151875] font-[600] text-[11px]" >{product.name}</h3>
+              <p className={`${josefinSans.className} text-[#151875] font-[600] text-[12px]`} >${product.price}</p>
+              <p className={`${josefinSans.className} text-[#FB2E86] font-[600] text-[12px] line-through`} >
+                {product.discountPercentage > 0 ? '$'+(product.price/(1-product.discountPercentage/100)).toFixed(0) : "" }
+              </p>
             </ul>
           </div>
         ))}

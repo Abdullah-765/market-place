@@ -1,11 +1,31 @@
+import { client } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
+import { defineQuery } from 'next-sanity'
 import { Josefin_Sans } from 'next/font/google'
+import Image from 'next/image'
+import { Slug } from 'sanity'
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
   weight: ['100', '300', '400', '500', '600', '700'],
 })
-import Image from 'next/image'
 
-export default function TrendingProducts(){
+interface TrendingProductsProps {
+  id: number,
+  name: string,
+  slug: Slug,
+  image: string,
+  price: number,
+  discountPercentage: number,
+  description: string,
+  stockLevel: number,
+  category: string,
+}
+
+export default async function TrendingProducts(){
+
+  const query = defineQuery(`*[_type == "trendingProducts"] {description, image, price, discountPercentage, name, stockLevel, category}`)
+  const trendingProducts = await client.fetch(query)
+
    return (
     <div id="Trending-products" className="mx-[20px] lg:mx-[150px]">
         <h2 className={`${josefinSans.className} mt-6 mb-1 text-center text-[26px] text-[#1A0B5B] font-bold`}>Trending Products</h2>

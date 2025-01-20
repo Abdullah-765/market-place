@@ -1,0 +1,30 @@
+import { client } from '@/sanity/lib/client'
+import { Josefin_Sans } from 'next/font/google'
+import { urlFor } from '@/sanity/lib/image'
+const josefinSans = Josefin_Sans({
+  subsets: ['latin'],
+  weight: ['100', '300', '400', '500', '600', '700'],
+})
+import { defineQuery } from 'next-sanity'
+import Image from 'next/image'
+
+export default async function MarketingPanel(){
+
+  const query = defineQuery(`*[_type == "marketingPanel"] {description, smallText, largeText, buttonText, image}`)
+  const data = await client.fetch(query)
+  
+   return (
+    <div id="marketing-panel-main-div" className="lg:px-[200px] overflow-hidden box-border flex gap-[5px] w-[100%] justify-evenly bg-[#F1F0FF] relative items-center p-[30px] h-[50vh] sm:h-[60vh] ">
+        <div className='max-w-[500px]'>
+        <h3 className="text-[#FB2E86] text-[12px]">{data[0].smallText}</h3>
+        <h1 className={josefinSans.className}><span className="text-[24px] font-bold lg:text-[36px]">{data[0].largeText}</span></h1>
+        <p className="hidden  sm:block">{data[0].description}</p>
+        <button className="bg-[#FB2E86] text-white py-[8px] px-[20px] cursor-pointer text-[12px] mt-[30px]"><span className={josefinSans.className}>{data[0].buttonText}</span></button>
+        </div>
+        <Image src={"/lamp-main-page.png"} 
+  alt="marketing" 
+  width={250} height={250} className='hidden lg:block lg:absolute top-0 left-1' />
+        <Image src={urlFor(data[0].image).url()} alt="marketing" width={450} height={450} layout='responsive' className="w-[60%] max-w-[450px] " />
+      </div>
+   )    
+}

@@ -1,5 +1,3 @@
-import { sources } from "next/dist/compiled/webpack/webpack";
-
 export default {
     name: 'product',
     type: 'document',

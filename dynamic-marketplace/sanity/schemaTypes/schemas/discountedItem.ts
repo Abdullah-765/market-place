@@ -1,3 +1,5 @@
+import { title } from "process";
+
 export default {
     name: 'discountedItem',
     type: 'document',
@@ -35,6 +37,12 @@ export default {
         title: 'Price',
         validation: (Rule: any) => Rule.required().error('Price is required'),
       },
+    {
+      name: 'mainHeading',
+      type: 'string',
+      title: 'Main Heading',
+      validation: (Rule: any) => Rule.required().error('Main Heading is required'),
+    },
       {
         name: 'discountPercentage',
         type: 'number',
@@ -67,9 +75,26 @@ export default {
         validation: (Rule: any) => Rule.required().error('Description is required'),
       },
       {
-        name: 'mainHeading',
+        name: 'descriptionPoint1',
+        title: 'Description Point 1',
         type: 'string',
-        title: 'Main Heading',
-      }
+        description: 'Enter the first point of the description. (not mandatory but it has some ui effects)',
+      },
+      {
+        name: 'descriptionPoint2',
+        title: 'Description Point 2',
+        type: 'string',
+      },
+      {
+        name: 'descriptionPoint3',
+        title: 'Description Point 3',
+        type: 'string',
+      },
+      {
+        name: 'descriptionPoint4',
+        title: 'Description Point 4',
+        type: 'string',
+      },
+      
     ],
   };

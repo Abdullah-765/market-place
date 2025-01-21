@@ -1,5 +1,5 @@
 export default {
-    name: 'uniqueFeaturs',
+    name: 'uniqueFeatures',
     type: 'document',
     title: 'Unique Features of Trending Product',
     fields: [
@@ -17,8 +17,8 @@ export default {
       {
         name: 'slug',
         type: 'slug',
-        title: 'slug',
-        Option: {sources: 'name'}
+        title: 'Slug',
+        options: {source: 'name'}
       },
       {
         name: 'image',

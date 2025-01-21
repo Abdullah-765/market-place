@@ -34,7 +34,7 @@ export default async function LatestProducts() {
       <ul className="flex flex-wrap gap-[20px] justify-center lg:mx-[200px]" id="latest-products">
 
         {featuredProducts.map((product: latestProductsProps) => (
-          <div className="flex items-center justify-center lg:w-[280px] flex-col shadow-sm">
+          <div className="flex items-center justify-center w-[180px] lg:w-[280px] flex-col shadow-sm" key={product.id}>
             <img src={urlFor(product.image).url()} alt="" className=" w-[150px] bg-[#F6F7FB] mb-[10px]" />
             <ul className="flex justify-evenly items-center bg-white w-[100%] gap-[4px] ">
               <h3 className="text-[#151875] font-[600] text-[11px]" >{product.name}</h3>

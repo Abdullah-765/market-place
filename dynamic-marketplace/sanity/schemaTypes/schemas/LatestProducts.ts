@@ -26,8 +26,8 @@ export default {
       {
         name: 'slug',
         type: 'slug',
-        title: 'slug',
-        Option: {source: 'name'}
+        title: 'Slug',
+        options: {source: 'name'}
       },
       {
         name: 'price',

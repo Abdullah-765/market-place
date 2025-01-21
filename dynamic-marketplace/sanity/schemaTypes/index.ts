@@ -6,7 +6,8 @@ import discountedItem from './schemas/discountedItem'
 import discountsArea from './schemas/discountsArea'
 import marketingPanel from './schemas/marketingPanel'
 import uniqueFeatures from './schemas/uniqueFeatures'
+import trendingProducts from './schemas/trendingProducts'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [products, featuredProducts, LatestProducts, discountedItem, discountsArea, marketingPanel, uniqueFeatures],
+  types: [products, featuredProducts, LatestProducts, discountedItem, discountsArea, marketingPanel, uniqueFeatures, trendingProducts],
 }

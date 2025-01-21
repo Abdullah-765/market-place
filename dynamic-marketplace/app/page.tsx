@@ -9,6 +9,7 @@ import TopCategories from "@/components/top-categories";
 import SubscribeToBlog from "@/components/subscribe-to-blog";
 import LatestBlog from "@/components/latest-blog";
 
+
 export default function Home() {
   
   return (

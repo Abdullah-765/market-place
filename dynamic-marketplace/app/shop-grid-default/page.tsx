@@ -13,7 +13,7 @@ import Link from 'next/link'
 interface productsDataProps {
   id: number,
   name: string,
-  slug: Slug,
+  slug: {current: string},
   image: string,
   price: number,
   description: string,
@@ -23,7 +23,7 @@ interface productsDataProps {
 }
 export default async function GridDefault() {
 
-  const query = defineQuery(`*[_type == "product"] {id, description, image, price, discountPercentage, name, stockLevel, category}`)
+  const query = defineQuery(`*[_type == "product"] {id, slug, description, image, price, discountPercentage, name, stockLevel, category}`)
   const productsData = await client.fetch(query)
 
   return (
@@ -84,8 +84,8 @@ export default async function GridDefault() {
         <ul className="grid grid-cols-2 gap-[15px] mt-[20px] lg:grid-cols-4">
 
 {productsData.map((product: productsDataProps) => (
-           <Link href={`/product/${product.slug}`} key={product.id}>
-             <li className="flex items-center p-[17px] justify-center flex-col shadow-sm">
+           <Link href={`/product/${product.slug.current}`} key={product.id}>
+             <li className="flex items-center p-[17px] h-[250px] justify-center flex-col border border-gray-100">
             <img src={urlFor(product.image).url()} alt="" className="h-[65%] mb-[10px]" />
             <ul className="flex justify-center bg-white flex-col items-center w-full gap-[4px] ">
               <h3 className={`${josefinSans.className} text-[#151875] font-bold text-center mt-[5px]`}>{product.name}</h3>

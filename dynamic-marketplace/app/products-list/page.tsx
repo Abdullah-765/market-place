@@ -21,7 +21,7 @@ interface productsDataProps {
   stockLevel: number,
   category: string,
 }
-export default async function GridDefault() {
+export default async function ProductsList() {
 
   const query = defineQuery(`*[_type == "product"] {id, slug, description, image, price, discountPercentage, name, stockLevel, category}`)
   const productsData = await client.fetch(query)

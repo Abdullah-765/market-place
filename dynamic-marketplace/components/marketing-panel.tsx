@@ -7,6 +7,7 @@ const josefinSans = Josefin_Sans({
 })
 import { defineQuery } from 'next-sanity'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default async function MarketingPanel(){
 
@@ -19,7 +20,7 @@ export default async function MarketingPanel(){
         <h3 className="text-[#FB2E86] text-[12px]">{data[0].smallText}</h3>
         <h1 className={josefinSans.className}><span className="text-[24px] font-bold lg:text-[36px]">{data[0].largeText}</span></h1>
         <p className="hidden  sm:block">{data[0].description}</p>
-        <button className="bg-[#FB2E86] text-white py-[8px] px-[20px] cursor-pointer text-[12px] mt-[30px]"><span className={josefinSans.className}>{data[0].buttonText}</span></button>
+        <Link href={"/products-list"} ><button className="bg-[#FB2E86] text-white py-[8px] px-[20px] cursor-pointer text-[12px] mt-[30px]"><span className={josefinSans.className}>{data[0].buttonText}</span></button></Link>  
         </div>
         <Image src={"/lamp-main-page.png"} 
   alt="marketing" 

@@ -8,11 +8,12 @@ const josefinSans = Josefin_Sans({
 import { defineQuery } from 'next-sanity'
 import Image from 'next/image'
 import { Slug } from 'sanity'
+import Link from 'next/link'
 
 interface featuredProductsProps {
   id: number,
   name: string,
-  slug: Slug,
+  slug: {current: string},
   image: string,
   price: number,
   description: string,
@@ -22,7 +23,7 @@ interface featuredProductsProps {
 }
 export default async function FeaturedProducts() {
 
-  const query = defineQuery(`*[_type == "featuredProducts"] {id, description, image, price, discountPercentage, name, stockLevel, category}`)
+  const query = defineQuery(`*[_type == "featuredProducts"] {id, slug, description, image, price, discountPercentage, name, stockLevel, category}`)
   const featuredProducts = await client.fetch(query)
 
   return (
@@ -31,6 +32,8 @@ export default async function FeaturedProducts() {
       <h3 className="text-center text-[14px] text-[#FB2E86] mb-3 font-bold ">Check All</h3>
       <ul className="flex flex-wrap gap-[20px] items-center justify-center" id="featured-products">
         {featuredProducts.map((product: featuredProductsProps) => (
+                               <Link href={`/product/${product.slug.current}`} key={product.id}>
+
           <div className="lg:min-w-[200px] w-[170px] h-[250px] lg:max-w-[250px] flex items-center justify-center flex-col shadow-sm" key={product.id}>
             <div className="bg-[#F6F7FB] mb-[10px] h-[70%]">
               <Image width={100} height={100} src={urlFor(product.image).url()} alt="featured-products-img" className='h-full' />
@@ -40,6 +43,7 @@ export default async function FeaturedProducts() {
               <p className={josefinSans.className}>${product.price}</p>
             </ul>
           </div>
+          </Link>
         ))}
       </ul>
     </div>

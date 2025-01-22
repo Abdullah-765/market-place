@@ -106,6 +106,7 @@ export default function ProductDetails() {
 
       <h2 className={`${josefinSans.className} text-[#101750] text-[22px] font-bold mx-[20px] mt-[40px]`}>Related Products</h2>
       <div className="mx-[20px] mt-[40px] flex flex-wrap gap-[20px] items-center justify-center">
+        
         <ul className="w-[190px] p-[5px] md:w-[220px]">
           <li>
             <img src="/related-products/img1.png" alt="" />
@@ -121,6 +122,8 @@ export default function ProductDetails() {
           </ul>
           <li className={`${josefinSans.className} text-[#151875]`}>$26.00</li>
         </ul>
+
+
         <ul className="w-[190px] p-[5px] md:w-[220px]">
           <li>
             <img src="/related-products/img2.png" alt="" />

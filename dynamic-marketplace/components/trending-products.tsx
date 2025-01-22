@@ -3,6 +3,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { defineQuery } from 'next-sanity'
 import { Josefin_Sans } from 'next/font/google'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Slug } from 'sanity'
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
@@ -12,7 +13,7 @@ const josefinSans = Josefin_Sans({
 interface TrendingProductsProps {
   id: number,
   name: string,
-  slug: Slug,
+  slug: {current: string},
   image: string,
   price: number,
   discountPercentage: number,
@@ -23,7 +24,7 @@ interface TrendingProductsProps {
 
 export default async function TrendingProducts() {
 
-  const query = defineQuery(`*[_type == "trendingProducts"] {description, image, price, discountPercentage, name, stockLevel, category}`)
+  const query = defineQuery(`*[_type == "trendingProducts"] {description, slug,  image, price, discountPercentage, name, stockLevel, category}`)
   const trendingProducts = await client.fetch(query)
 
   return (
@@ -31,6 +32,7 @@ export default async function TrendingProducts() {
       <h2 className={`${josefinSans.className} mt-6 mb-1 text-center text-[26px] text-[#1A0B5B] font-bold`}>Trending Products</h2>
       <ul className="flex flex-wrap gap-[20px] justify-center items-center" id="featured-products">
         {trendingProducts.map((product: TrendingProductsProps) => (
+                     <Link href={`/product/${product.slug.current}`} key={product.id}>
           <div className="flex items-center justify-center flex-col shadow-sm w-[160px] lg:min-w-[200px]" key={product.id}>
             <img src={urlFor(product.image).url()} alt={product.name} className="bg-[#F6F7FB] h-[70%] mb-[10px]" />
             <ul className="flex justify-center flex-col items-center bg-white w-[100%] gap-[4px] py-[10px]">
@@ -43,6 +45,7 @@ export default async function TrendingProducts() {
               </ul>
             </ul>
           </div>
+          </Link>
         ))
         }
 

@@ -68,4 +68,11 @@ export default {
         validation: (Rule: any) => Rule.required().error('Category is required'),
       },
     ],
+    preview: {
+      select: {
+        title: 'name',
+        subtitle: 'id',
+        media: 'image',
+      }
+    }
   };

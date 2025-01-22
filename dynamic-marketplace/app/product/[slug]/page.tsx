@@ -3,12 +3,16 @@ import { Josefin_Sans } from "next/font/google";
 import { urlFor } from "@/sanity/lib/image"; // Image utility
 import { notFound } from "next/navigation"; // For handling 404
 import { Metadata } from "next"; // Optional: To set metadata
+
 import Image from "next/image";
 const josefinSans = Josefin_Sans({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "600", "700"],
 });
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+
 interface Product {
   name: string;
   image: any;
@@ -26,9 +30,22 @@ async function fetchProduct(slug: string) {
   const product = await client.fetch(query, { slug });
   return product;
 }
-
+interface RelatedProduct extends Omit<Product, 'category'> { }
 export default async function ProductDetail({ params }: { params: { slug: string } }) {
+
   const product = await fetchProduct(params.slug);
+  const relatedProductsQuery = `
+    *[_type == "product" && category == $category && slug.current != $slug][0...3] {
+      name,
+      price,
+      image,
+      slug
+    }
+  `;
+  const relatedProducts: RelatedProduct[] = await client.fetch(relatedProductsQuery, {
+    category: product.category,
+    slug: product.slug.current,
+  });
 
   if (!product) {
     notFound(); // Redirect to 404 page if product is not found
@@ -42,8 +59,8 @@ export default async function ProductDetail({ params }: { params: { slug: string
           {product.name} Details
         </h1>
         <li className="text-[10px]">
-          <p>Home . </p>
-          <p>Pages . </p>
+          <Link href={'/'}>Home .</Link>
+          <Link href={'/products-list'}>Products</Link>
           <p className="text-[#FB2E86]">Product Details</p>
         </li>
       </div>
@@ -51,15 +68,15 @@ export default async function ProductDetail({ params }: { params: { slug: string
       {/* Product details */}
       <div className="container flex items-center justify-center">
         <div className="flex flex-col mt-10 md:flex-row items-center p-4 shadow-evenly-around max-w-[750px] overflow-hidden">
-            <div>
-              <Image
-                src={urlFor(product.image).url()}
-                alt="Main product view"
-                className="object-contain"
-                width={380}
-                height={380}
-                layout="responsive"
-              />
+          <div>
+            <Image
+              src={urlFor(product.image).url()}
+              alt="Main product view"
+              className="object-contain"
+              width={380}
+              height={380}
+              layout="responsive"
+            />
           </div>
 
           <div className="flex flex-col gap-[10px] mt-4 md:mt-0 md:ml-4 w-full md:w-1/2">
@@ -96,6 +113,32 @@ export default async function ProductDetail({ params }: { params: { slug: string
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 className={`${josefinSans.className} text-[#101750] text-[22px] font-bold mx-[20px] mt-[40px]`}>Related Products</h2>
+        <div className="mx-[20px] mt-[40px] flex flex-wrap gap-[20px] justify-center">
+          {relatedProducts.map((relatedProduct) => (
+            <ul key={relatedProduct.slug.current} className="w-[190px] h-fit p-[5px] md:w-[220px]">
+              <Link href={`/product/${relatedProduct.slug.current}`}>
+                <li>
+                  <Image
+                    src={urlFor(relatedProduct.image).url()}
+                    alt={relatedProduct.name}
+                    width={150}
+                    height={150}
+                    className="w-fit h-full"
+                  />
+                </li>
+
+                <ul className="flex justify-between items-center mt-[10px]">
+                  <li className={`${josefinSans.className} text-[#151875]`}>{relatedProduct.name}</li>
+                </ul>
+                <li className={`${josefinSans.className} text-[#151875]`}>${relatedProduct.price}</li>
+              </Link>
+            </ul>
+          ))}
         </div>
       </div>
     </div>

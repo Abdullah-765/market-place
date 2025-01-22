@@ -80,13 +80,10 @@ export default function Navbar() {
                       <div className="items-center gap-4">
                       <Link href={'/faqs'}>FAQs</Link>
                       </div>
-                      <div className="items-center gap-4">
-                      <Link href={'/faqs'}>Shop List</Link>
-                      </div>
                     </div>
                 </PopoverContent>
               </Popover>
-              <li><Link href={"/shop-grid-default"} className="cursor-pointer">Products</Link></li>
+              <li><Link href={"/products-list"} className="cursor-pointer">Products</Link></li>
               <li><Link href={"/blog-page"} className="cursor-pointer">Blog</Link></li>
               <li><Link href={"/shop-left-sidebar"} className="cursor-pointer">Shop</Link></li>
               <li><Link href={"/about-us"} className="cursor-pointer">About Us</Link></li>
@@ -143,13 +140,10 @@ export default function Navbar() {
                       <div className="items-center gap-4">
                       <Link href={'/faqs'}>FAQs</Link>
                       </div>
-                      <div className="items-center gap-4">
-                      <Link href={'/faqs'}>Shop List</Link>
-                      </div>
                     </div>
                 </PopoverContent>
               </Popover>
-          <li><Link href={"/shop-grid-default"} className="cursor-pointer">Products</Link></li>
+          <li><Link href={"/products-list"} className="cursor-pointer">Products</Link></li>
           <li><Link href={"/blog-page"} className="cursor-pointer">Blog</Link></li>
           <li><Link href={"/shop-left-sidebar"} className="cursor-pointer">Shop</Link></li>
           <li><Link href={"/about-us"} className="cursor-pointer">About Us</Link></li>

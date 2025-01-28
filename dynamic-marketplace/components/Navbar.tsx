@@ -3,14 +3,14 @@
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { Josefin_Sans } from 'next/font/google'
+import { FiShoppingCart, FiTruck } from "react-icons/fi";
+import useCartStore from "@/store/useCartStore";
 import Link from "next/link"
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
   weight: ['100', '300', '400', '500', '600', '700'],
 })
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
@@ -19,9 +19,14 @@ import {
 
 
 export default function Navbar() {
-  const [isVisible, setIsVisible] = useState(false);
 
-  // State to track screen width
+
+  const [isVisible, setIsVisible] = useState(false);
+  const { cart } = useCartStore();
+
+
+  
+  // State to track screen width  
   const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   // Update screen size on resize
@@ -59,9 +64,15 @@ export default function Navbar() {
               <ul className="flex flex-wrap  gap-x-[10px] justify-start ">
                 <li>English <Image src="/imgs/arrow-down-icn.png" width={16} height={16} alt="arrow" /></li>
                 <li>USD <Image src="/imgs/arrow-down-icn.png" width={16} height={16} alt="arrow" /></li>
-                <Link href={"/login"} className="flex items-center gap-[5px]">Login<Image src="/imgs/carbon_user.png" width={16} height={16} alt="user" /></Link>
-                <Link href={"/wishlist"} className="flex items-center gap-[5px]">Wishlist<Image src="/imgs/uil_heart-alt.png" width={16} height={16} alt="wishlist" /></Link>
-                <Link href={"/shop-cart"} className="flex items-center gap-[5px]">Cart<Image src="/imgs/fluent_cart-24-regular.png" width={24} height={24} alt="cart" /></Link>
+                <Link href={"/login"} className="flex items-center gap-[5px]"><Image src="/imgs/carbon_user.png" width={16} height={16} alt="user" /></Link>
+                <Link href="/shop-cart">
+                  <FiShoppingCart className="relative h-6 w-6 cursor-pointer" />
+                  {cart.length > 0 && (
+                    <div className="absolute right-[1.7rem] -top-2 rounded-full bg-black px-[7px] py-[2px] text-center text-xs text-white">
+                      {cart.length}
+                    </div>
+                  )}
+                </Link>
               </ul>
 
             </div>
@@ -73,14 +84,14 @@ export default function Navbar() {
                   <Button variant="ghost">Pages</Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[100px]">
-                    <div className="grid gap-2">
-                      <div className="items-center gap-4">
-                        <Link href={'/about-us'}>About Us</Link>
-                      </div>
-                      <div className="items-center gap-4">
-                      <Link href={'/faqs'}>FAQs</Link>
-                      </div>
+                  <div className="grid gap-2">
+                    <div className="items-center gap-4">
+                      <Link href={'/about-us'}>About Us</Link>
                     </div>
+                    <div className="items-center gap-4">
+                      <Link href={'/faqs'}>FAQs</Link>
+                    </div>
+                  </div>
                 </PopoverContent>
               </Popover>
               <li><Link href={"/products-list"} className="cursor-pointer">Products</Link></li>
@@ -109,15 +120,21 @@ export default function Navbar() {
       <div>
         <div className="bg-[#7E33E0] text-white flex justify-between p-[10px]">
           <ul className="div-number-mail flex gap-[10px]">
-            <li><Image src="/imgs/uil_envelope-alt.png" width={16} height={16} alt="msg-icon" /><p className="truncate .">mhhasanul@gmail.com</p></li>
-            <li><Image src="/imgs/bx_bx-phone-call.png" width={16} height={16} alt="call-icon" />(12345)67890</li>
+            <li><Image src="/imgs/uil_envelope-alt.png" width={22} height={22} alt="msg-icon" /><p className="truncate .">mhhasanul@gmail.com</p></li>
+            <li><Image src="/imgs/bx_bx-phone-call.png" width={22} height={22} alt="call-icon" />(12345)67890</li>
           </ul>
-          <ul className="flex flex-wrap  gap-x-[10px] justify-start ">
-            <li>English <Image src="/imgs/arrow-down-icn.png" width={16} height={16} alt="arrow" /></li>
-            <li>USD <Image src="/imgs/arrow-down-icn.png" width={16} height={16} alt="arrow" /></li>
-            <Link href={"/login"} className="flex items-center gap-[5px]">Login<Image src="/imgs/carbon_user.png" width={16} height={16} alt="user" /></Link>
-            <Link href={"/wishlist"} className="flex items-center gap-[5px]">Wishlist<Image src="/imgs/uil_heart-alt.png" width={16} height={16} alt="wishlist" /></Link>
-            <Link href={"/shop-cart"} className="flex items-center gap-[5px]">Cart<Image src="/imgs/fluent_cart-24-regular.png" width={24} height={24} alt="cart" /></Link>
+          <ul className="flex flex-wrap  gap-x-[10px] justify-start px-[10px] ">
+            <li>English <Image src="/imgs/arrow-down-icn.png" width={22} height={22} alt="arrow" /></li>
+            <li>USD <Image src="/imgs/arrow-down-icn.png" width={22} height={22} alt="arrow" /></li>
+            <Link href={"/login"} className="flex items-center gap-[5px]"><Image src="/imgs/carbon_user.png" width={22} height={22} alt="user" /></Link>
+            <Link href="/shop-cart" className="">
+              <FiShoppingCart className="relative h-6 w-6 cursor-pointer" />
+              {cart.length > 0 && (
+                <div className="absolute right-[10px] top-0 rounded-full bg-black px-[7px] py-[2px] text-center text-xs text-white">
+                  {cart.length}
+                </div>
+              )}
+            </Link>
           </ul>
 
         </div>
@@ -129,20 +146,20 @@ export default function Navbar() {
         <ul id="links" className="flex gap-x-[20px] flex-wrap justify-start align-center text-[#0D0E43] px-[10px] mt-[10px] ">
           <li className="text-[#FB2E86]"><Link href={'/'}>Home</Link></li>
           <Popover>
-                <PopoverTrigger asChild className="w-fit p-0 m-0 h-fit text-[12px] text-[black] font-[500]">
-                  <Button variant="ghost">Pages</Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[100px]">
-                    <div className="grid gap-2">
-                      <div className="items-center gap-4">
-                        <Link href={'/about-us'}>About Us</Link>
-                      </div>
-                      <div className="items-center gap-4">
-                      <Link href={'/faqs'}>FAQs</Link>
-                      </div>
-                    </div>
-                </PopoverContent>
-              </Popover>
+            <PopoverTrigger asChild className="w-fit p-0 m-0 h-fit text-[12px] text-[black] font-[500]">
+              <Button variant="ghost">Pages</Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[100px]">
+              <div className="grid gap-2">
+                <div className="items-center gap-4">
+                  <Link href={'/about-us'}>About Us</Link>
+                </div>
+                <div className="items-center gap-4">
+                  <Link href={'/faqs'}>FAQs</Link>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
           <li><Link href={"/products-list"} className="cursor-pointer">Products</Link></li>
           <li><Link href={"/blog-page"} className="cursor-pointer">Blog</Link></li>
           <li><Link href={"/shop-left-sidebar"} className="cursor-pointer">Shop</Link></li>

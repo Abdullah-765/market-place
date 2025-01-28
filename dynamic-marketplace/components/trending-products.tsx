@@ -32,8 +32,9 @@ export default async function TrendingProducts() {
       <h2 className={`${josefinSans.className} mt-6 mb-1 text-center text-[26px] text-[#1A0B5B] font-bold`}>Trending Products</h2>
       <ul className="flex flex-wrap gap-[20px] justify-center items-center" id="featured-products">
         {trendingProducts.map((product: TrendingProductsProps) => (
-                     <Link href={`/product/${product.slug.current}`} key={product.id}>
-          <div className="flex items-center justify-center flex-col shadow-sm w-[160px] lg:min-w-[200px]" key={product.id}>
+          <li key={product.id}>
+        <Link href={`/product/${product.slug.current}`}>
+          <div className="flex items-center justify-center flex-col shadow-sm w-[160px] lg:min-w-[200px]">
             <img src={urlFor(product.image).url()} alt={product.name} className="bg-[#F6F7FB] h-[70%] mb-[10px]" />
             <ul className="flex justify-center flex-col items-center bg-white w-[100%] gap-[4px] py-[10px]">
               <h3 className="text-[#1A0B5B] font-[600] text-[10px]">{product.name}</h3>
@@ -46,6 +47,8 @@ export default async function TrendingProducts() {
             </ul>
           </div>
           </Link>
+          </li>
+
         ))
         }
 

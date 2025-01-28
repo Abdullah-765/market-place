@@ -6,9 +6,8 @@ const josefinSans = Josefin_Sans({
   weight: ['100', '300', '400', '500', '600', '700'],
 })
 import { defineQuery } from 'next-sanity'
-import Image from 'next/image'
-import { Slug } from 'sanity'
 import Link from 'next/link'
+import { Loader } from 'lucide-react'
 
 interface productsDataProps {
   id: number,
@@ -80,7 +79,6 @@ export default async function ProductsList() {
             />
           </li>
         </ul>
-
         <ul className="grid grid-cols-2 gap-[15px] mt-[20px] lg:grid-cols-4">
 
 {productsData.map((product: productsDataProps) => (

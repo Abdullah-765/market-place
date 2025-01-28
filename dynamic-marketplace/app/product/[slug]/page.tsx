@@ -1,19 +1,25 @@
-import { client } from "@/sanity/lib/client"; // Sanity client setup
-import { Josefin_Sans } from "next/font/google";
-import { urlFor } from "@/sanity/lib/image"; // Image utility
-import { notFound } from "next/navigation"; // For handling 404
-import { Metadata } from "next"; // Optional: To set metadata
+'use client'
 
+import { useState, useEffect } from "react";
+import Loader from "@/components/loader";
+import { client } from "@/sanity/lib/client";
+import { Josefin_Sans } from "next/font/google";
+import { urlFor } from "@/sanity/lib/image";
+import { useRouter, useParams } from "next/navigation"; // Import useParams for migration-safe param access
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import useCartStore from "@/store/useCartStore";
+import React from "react";
+
 const josefinSans = Josefin_Sans({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "600", "700"],
 });
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-
 
 interface Product {
+  id: number;
   name: string;
   image: any;
   slug: { current: string };
@@ -24,33 +30,88 @@ interface Product {
   category: string;
 }
 
-// Fetch product data directly
-async function fetchProduct(slug: string) {
-  const query = `*[_type == "product" && slug.current == $slug][0]`;
-  const product = await client.fetch(query, { slug });
-  return product;
-}
-interface RelatedProduct extends Omit<Product, 'category'> { }
-export default async function ProductDetail({ params }: { params: { slug: string } }) {
+interface RelatedProduct extends Omit<Product, "category"> { }
 
-  const product = await fetchProduct(params.slug);
-  const relatedProductsQuery = `
-    *[_type == "product" && category == $category && slug.current != $slug][0...3] {
-      name,
-      price,
-      image,
-      slug
+export default function ProductDetail() {
+  const params = useParams(); // Access params dynamically
+  const slug = params.slug;// Unwrap the promise of `params`
+
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<RelatedProduct[]>([]);
+  const [quantity, setQuantity] = useState(1);
+
+  const { addToCart } = useCartStore();
+  const router = useRouter();
+
+  // Fetch product and related products
+  useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        const query = `*[_type == "product" && slug.current == $slug][0]`;
+        const productData = await client.fetch(query, { slug });
+
+        if (!productData) {
+          router.replace("/404"); // Redirect to 404 if product not found
+          return;
+        }
+
+        setProduct(productData);
+
+        const relatedQuery = `
+          *[_type == "product" && category == $category && slug.current != $slug][0...3] {
+            name,
+            price,
+            image,
+            slug
+          }
+        `;
+        const relatedProductsData = await client.fetch(relatedQuery, {
+          category: productData.category,
+          slug: productData.slug.current,
+        });
+        setRelatedProducts(relatedProductsData);
+      } catch (error) {
+        console.error("Failed to fetch product data:", error);
+        router.replace("/404");
+      }
+    };
+
+    fetchProductData();
+  }, [slug, router]);
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          slug: product.slug,
+          discountPercentage: product.discountPercentage,
+          description: product.description,
+          stockLevel: product.stockLevel,
+          category: product.category,
+        },
+        quantity
+      );
+      toast.success("Product added to cart");
+    } else {
+      toast.error("Product not added to cart");
     }
-  `;
-  const relatedProducts: RelatedProduct[] = await client.fetch(relatedProductsQuery, {
-    category: product.category,
-    slug: product.slug.current,
-  });
+    setQuantity(1);
+  };
+
 
   if (!product) {
-    notFound(); // Redirect to 404 page if product is not found
+    return <Loader />; // Show a loading state while fetching
   }
-
+  const handleQuantityChange = (change: number) => {
+    const newQuantity = quantity + change;
+    if (newQuantity >= 1) {
+      setQuantity(newQuantity);
+    }
+  };
   return (
     <div>
       {/* Page header */}
@@ -59,22 +120,22 @@ export default async function ProductDetail({ params }: { params: { slug: string
           {product.name} Details
         </h1>
         <li className="text-[10px]">
-          <Link href={'/'}>Home .</Link>
-          <Link href={'/products-list'}>Products</Link>
+          <Link href="/">Home .</Link>
+          <Link href="/products-list">Products</Link>
           <p className="text-[#FB2E86]">Product Details</p>
         </li>
       </div>
 
       {/* Product details */}
-      <div className="container flex items-center justify-center">
-        <div className="flex flex-col mt-10 md:flex-row items-center p-4 shadow-evenly-around max-w-[750px] overflow-hidden">
+      <div className="container flex items-center justify-center justify-self-center mx-[20px]">
+        <div className="flex flex-col mt-10 md:flex-row items-center lg:p-[50px] p-4 shadow-evenly-around max-w-[750px] overflow-hidden">
           <div>
             <Image
               src={urlFor(product.image).url()}
               alt="Main product view"
-              className="object-contain"
-              width={380}
-              height={380}
+              className="object-contain max-w-[400px] min-w-[150px]"
+              width={400}
+              height={400}
               layout="responsive"
             />
           </div>
@@ -86,7 +147,7 @@ export default async function ProductDetail({ params }: { params: { slug: string
             <div className={`${josefinSans.className} flex items-center gap-3`}>
               <span className="text-[#151875] text-[14px]">${product.price}</span>
               {product.discountPercentage > 0 && (
-                <span className="line-through text-[#F701A8]  text-[14px]">
+                <span className="line-through text-[#F701A8] text-[14px]">
                   ${((product.price / (1 - product.discountPercentage / 100)).toFixed(0))}
                 </span>
               )}
@@ -94,30 +155,39 @@ export default async function ProductDetail({ params }: { params: { slug: string
             <p className={`${josefinSans.className} text-[14px] text-[#9295AA]`}>
               {product.description}
             </p>
-            <p className={`${josefinSans.className} font-semibold text-sm text-[#0D134E]`}>Stock Awailable <span className="text-[#F701A8]">{product.stockLevel}</span></p>
+            <p className={`${josefinSans.className} font-semibold text-sm text-[#0D134E]`}>
+              Stock Available <span className="text-[#F701A8]">{product.stockLevel}</span>
+            </p>
             <ul className="flex gap-5">
-              <li className={`${josefinSans.className} text-[#0D134E] text-sm`}><Button variant={'ActivePage'}>Add to cart</Button></li>
-              <li><img src="/uil_heart-alt.png" alt="Wishlist" /></li>
-            </ul>
-
-            <div className="flex flex-col gap-[5px]">
-              <li className={`${josefinSans.className} font-semibold text-sm text-[#0D134E]`}>Categories <span className="text-[#F701A8]">{product.category}</span></li>
-              <li className={`${josefinSans.className} font-semibold text-sm text-[#0D134E]`}>Tags</li>
-              <div className={`${josefinSans.className} flex gap-2.5 font-semibold text-sm text-[#0D134E]`}>
-                <p>Share</p>
-                <ul className="flex gap-2.5">
-                  <img src="/product-details/facebook-share.png" alt="Facebook" />
-                  <img src="/product-details/instagram-share.png" alt="Instagram" />
-                  <img src="/product-details/twitter-share.png" alt="Twitter" />
-                </ul>
+              <div className="flex items-center rounded-full border border-gray-300">
+                <button
+                  onClick={() => handleQuantityChange(-1)}
+                  className="px-4 py-2 hover:bg-gray-100"
+                >
+                  -
+                </button>
+                <span className="px-4 py-2">{quantity}</span>
+                <button disabled={quantity > product.stockLevel -1 } onClick={() => handleQuantityChange(1)} className="px-4 py-2 hover:bg-gray-100"                   
+>
+                  +
+                </button>
               </div>
-            </div>
+              <li className={`${josefinSans.className} text-[#0D134E] text-sm`}>
+                <Button variant={"ActivePage"} onClick={handleAddToCart}>
+                  Add to cart
+                </Button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
 
       <div>
-        <h2 className={`${josefinSans.className} text-[#101750] text-[22px] font-bold mx-[20px] mt-[40px]`}>Related Products</h2>
+        <h2
+          className={`${josefinSans.className} text-[#101750] text-[22px] font-bold mx-[20px] mt-[40px]`}
+        >
+          Related Products
+        </h2>
         <div className="mx-[20px] mt-[40px] flex flex-wrap gap-[20px] justify-center">
           {relatedProducts.map((relatedProduct) => (
             <ul key={relatedProduct.slug.current} className="w-[190px] h-fit p-[5px] md:w-[220px]">
@@ -133,9 +203,13 @@ export default async function ProductDetail({ params }: { params: { slug: string
                 </li>
 
                 <ul className="flex justify-between items-center mt-[10px]">
-                  <li className={`${josefinSans.className} text-[#151875]`}>{relatedProduct.name}</li>
+                  <li className={`${josefinSans.className} text-[#151875]`}>
+                    {relatedProduct.name}
+                  </li>
                 </ul>
-                <li className={`${josefinSans.className} text-[#151875]`}>${relatedProduct.price}</li>
+                <li className={`${josefinSans.className} text-[#151875]`}>
+                  ${relatedProduct.price}
+                </li>
               </Link>
             </ul>
           ))}
@@ -144,9 +218,3 @@ export default async function ProductDetail({ params }: { params: { slug: string
     </div>
   );
 }
-
-// Optional: Set metadata for SEO purposes
-export const metadata: Metadata = {
-  title: "Product Details",
-  description: "Details about the product",
-};

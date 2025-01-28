@@ -4,6 +4,7 @@ import { log } from 'console'
 import { defineQuery } from 'next-sanity'
 import { Josefin_Sans } from 'next/font/google'
 import Image from 'next/image'
+import Link from 'next/link'
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
   weight: ['100', '300', '400', '500', '600', '700'],
@@ -37,7 +38,7 @@ if (!uniqueFeaturesData || uniqueFeaturesData.length === 0) {
         </ul>
 
         <ul className='flex gap-[10px] items-center'>
-          <li><button className="bg-[#FB2E86] text-white py-[8px] px-[30px] cursor-pointer text-[10px] mt-[5px]"><span className={josefinSans.className}>Add to Cart</span></button></li>
+          <li><Link href={`/product/${uniqueFeaturesData[0].slug.current}`}><button className="bg-[#FB2E86] text-white py-[8px] px-[30px] cursor-pointer text-[10px] mt-[5px]"><span className={josefinSans.className}>Shop now</span></button></Link></li>
 
           <li className='flex flex-col items-start justify-center'>
             <p className={`${josefinSans.className} text-[12px] text-[#151875]`}>{uniqueFeaturesData[0].name}</p>

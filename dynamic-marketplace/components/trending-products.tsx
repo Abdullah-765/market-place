@@ -1,10 +1,12 @@
+'use client'
+
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
+import { Loader } from 'lucide-react'
 import { defineQuery } from 'next-sanity'
 import { Josefin_Sans } from 'next/font/google'
-import Image from 'next/image'
 import Link from 'next/link'
-import { Slug } from 'sanity'
+import { useState, useEffect } from 'react'
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
   weight: ['100', '300', '400', '500', '600', '700'],
@@ -22,18 +24,33 @@ interface TrendingProductsProps {
   category: string,
 }
 
-export default async function TrendingProducts() {
 
-  const query = defineQuery(`*[_type == "trendingProducts"] {description, slug,  image, price, discountPercentage, name, stockLevel, category}`)
-  const trendingProducts = await client.fetch(query)
+
+export default function TrendingProducts() {
+
+  const [data, setData] = useState<TrendingProductsProps[] | null>(null)
+  useEffect(() => {
+    const fetchData = async () => {
+      const query = defineQuery(`*[_type == "trendingProducts"] {description, slug,  image, price, discountPercentage, name, stockLevel, category}`)
+      const result = await client.fetch(query)
+      setData(result);
+    };
+
+    fetchData();
+  }, []);
+  
+  if (!data) {
+    return <Loader/>;
+  }
+  
 
   return (
     <div id="Trending-products" className="mx-[20px] lg:mx-[150px]">
       <h2 className={`${josefinSans.className} mt-6 mb-1 text-center text-[26px] text-[#1A0B5B] font-bold`}>Trending Products</h2>
-      <ul className="flex flex-wrap gap-[20px] justify-center items-center" id="featured-products">
-        {trendingProducts.map((product: TrendingProductsProps) => (
-          <li key={product.id}>
-        <Link href={`/product/${product.slug.current}`}>
+      <div className="flex flex-wrap gap-[20px] justify-center items-center" id="featured-products">
+        {data.map((product: TrendingProductsProps) => (
+          <li >
+        <Link href={`/product/${product.slug.current}` }>
           <div className="flex items-center justify-center flex-col shadow-sm w-[160px] lg:min-w-[200px]">
             <img src={urlFor(product.image).url()} alt={product.name} className="bg-[#F6F7FB] h-[70%] mb-[10px]" />
             <ul className="flex justify-center flex-col items-center bg-white w-[100%] gap-[4px] py-[10px]">
@@ -51,9 +68,8 @@ export default async function TrendingProducts() {
 
         ))
         }
+      </div>
 
-
-      </ul>
     </div>
   )
 }

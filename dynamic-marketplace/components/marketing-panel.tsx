@@ -1,18 +1,40 @@
+'use client'
+
 import { client } from '@/sanity/lib/client'
 import { Josefin_Sans } from 'next/font/google'
 import { urlFor } from '@/sanity/lib/image'
+import { useEffect, useState } from 'react'
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
   weight: ['100', '300', '400', '500', '600', '700'],
 })
-import { defineQuery } from 'next-sanity'
 import Image from 'next/image'
 import Link from 'next/link'
+import Loader from './loader'
 
-export default async function MarketingPanel(){
+interface MarketingPanelItem {
+  description: string;
+  smallText: string;
+  largeText: string;
+  buttonText: string;
+  image: any; // Update this if you have a specific type for the image
+}
 
-  const query = defineQuery(`*[_type == "marketingPanel"] {description, smallText, largeText, buttonText, image}`)
-  const data = await client.fetch(query)
+export default function MarketingPanel(){
+const [data, setData] = useState<MarketingPanelItem[] | null>(null)
+  useEffect(() => {
+    const fetchData = async () => {
+      const query = `*[_type == "marketingPanel"] {description, smallText, largeText, buttonText, image}`;
+      const result = await client.fetch(query);
+      setData(result);
+    };
+
+    fetchData();
+  }, []);
+  
+  if (!data) {
+    return <Loader/>;
+  }
   
    return (
     <div id="marketing-panel-main-div" className="lg:px-[200px] overflow-hidden box-border flex gap-[5px] w-[100%] justify-evenly bg-[#F1F0FF] relative items-center p-[30px] h-[50vh] sm:h-[60vh] ">

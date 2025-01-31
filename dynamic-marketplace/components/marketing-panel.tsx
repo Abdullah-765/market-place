@@ -1,5 +1,3 @@
-'use client'
-
 import { client } from '@/sanity/lib/client'
 import { Josefin_Sans } from 'next/font/google'
 import { urlFor } from '@/sanity/lib/image'
@@ -12,7 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Loader from './loader'
 
-interface MarketingPanelItem {
+export interface MarketingPanelProps {
   description: string;
   smallText: string;
   largeText: string;
@@ -20,21 +18,21 @@ interface MarketingPanelItem {
   image: any; // Update this if you have a specific type for the image
 }
 
-export default function MarketingPanel(){
-const [data, setData] = useState<MarketingPanelItem[] | null>(null)
-  useEffect(() => {
-    const fetchData = async () => {
-      const query = `*[_type == "marketingPanel"] {description, smallText, largeText, buttonText, image}`;
-      const result = await client.fetch(query);
-      setData(result);
-    };
+export default function MarketingPanel({data}:{data:MarketingPanelProps[]}){
+// const [data, setData] = useState<MarketingPanelProps[] | null>(null)
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const query = `*[_type == "marketingPanel"] {description, smallText, largeText, buttonText, image}`;
+//       const result = await client.fetch(query);
+//       setData(result);
+//     };
 
-    fetchData();
-  }, []);
+//     fetchData();
+//   }, []);
   
-  if (!data) {
-    return <Loader/>;
-  }
+//   if (!data) {
+//     return <Loader/>;
+//   }
   
    return (
     <div id="marketing-panel-main-div" className="lg:px-[200px] overflow-hidden box-border flex gap-[5px] w-[100%] justify-evenly bg-[#F1F0FF] relative items-center p-[30px] h-[50vh] sm:h-[60vh] ">

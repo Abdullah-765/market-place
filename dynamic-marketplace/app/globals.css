@@ -78,7 +78,7 @@ li {
   width: 110px;
 }
 
-#featured-products div, #latest-products div {
+#featured-products div, #latest-products ul {
   padding-top: 20px;
   background-color: #F6F7FB;
 }

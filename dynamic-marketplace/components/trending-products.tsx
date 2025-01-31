@@ -1,5 +1,3 @@
-'use client'
-
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { Loader } from 'lucide-react'
@@ -26,22 +24,22 @@ interface TrendingProductsProps {
 
 
 
-export default function TrendingProducts() {
+export default function TrendingProducts({data}:{data:TrendingProductsProps[]}) {
 
-  const [data, setData] = useState<TrendingProductsProps[] | null>(null)
-  useEffect(() => {
-    const fetchData = async () => {
-      const query = defineQuery(`*[_type == "trendingProducts"] {description, slug,  image, price, discountPercentage, name, stockLevel, category}`)
-      const result = await client.fetch(query)
-      setData(result);
-    };
+  // const [data, setData] = useState<TrendingProductsProps[] | null>(null)
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const query = defineQuery(`*[_type == "trendingProducts"] {id, description, slug,  image, price, discountPercentage, name, stockLevel, category}`)
+  //     const result = await client.fetch(query)
+  //     setData(result);
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   
-  if (!data) {
-    return <Loader/>;
-  }
+  // if (!data) {
+  //   return <Loader/>;
+  // }
   
 
   return (
@@ -49,8 +47,9 @@ export default function TrendingProducts() {
       <h2 className={`${josefinSans.className} mt-6 mb-1 text-center text-[26px] text-[#1A0B5B] font-bold`}>Trending Products</h2>
       <div className="flex flex-wrap gap-[20px] justify-center items-center" id="featured-products">
         {data.map((product: TrendingProductsProps) => (
-          <li >
-        <Link href={`/product/${product.slug.current}` }>
+          <li key={product.id}>
+                    <Link href={`/product/${product.slug.current}`}>
+                    
           <div className="flex items-center justify-center flex-col shadow-sm w-[160px] lg:min-w-[200px]">
             <img src={urlFor(product.image).url()} alt={product.name} className="bg-[#F6F7FB] h-[70%] mb-[10px]" />
             <ul className="flex justify-center flex-col items-center bg-white w-[100%] gap-[4px] py-[10px]">

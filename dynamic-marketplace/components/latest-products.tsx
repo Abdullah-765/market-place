@@ -1,10 +1,6 @@
-import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
-import { Loader } from 'lucide-react'
-import { defineQuery } from 'next-sanity'
 import { Josefin_Sans } from 'next/font/google'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
   weight: ['100', '300', '400', '500', '600', '700'],

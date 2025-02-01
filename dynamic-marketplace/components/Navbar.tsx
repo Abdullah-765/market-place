@@ -65,16 +65,15 @@ export default function Navbar() {
                 <li>English <Image src="/imgs/arrow-down-icn.png" width={16} height={16} alt="arrow" /></li>
                 <li>USD <Image src="/imgs/arrow-down-icn.png" width={16} height={16} alt="arrow" /></li>
                 <Link href={"/login"} className="flex items-center gap-[5px]"><Image src="/imgs/carbon_user.png" width={16} height={16} alt="user" /></Link>
-                <Link href="/shop-cart">
-                  <FiShoppingCart className="relative h-6 w-6 cursor-pointer" />
-                  {cart.length > 0 && (
-                    <div className="absolute right-[1.7rem] -top-2 rounded-full bg-black px-[7px] py-[2px] text-center text-xs text-white">
-                      {cart.length}
-                    </div>
-                  )}
-                </Link>
+                <Link href="/shop-cart" className="relative" >
+              <FiShoppingCart className="h-6 w-6 cursor-pointer" />
+              {cart.length > 0 && (
+                <div className="absolute -right-[10px] -top-1 rounded-full bg-black px-[7px] py-[2px] text-center text-xs text-white">
+                  {cart.length}
+                </div>
+              )}
+            </Link>
               </ul>
-
             </div>
 
             <ul id="links" className="flex flex-col gap-x-[20px] flex-wrap justify-start align-center text-[#0D0E43] px-[10px] mt-[10px] ">
@@ -168,7 +167,7 @@ export default function Navbar() {
         </ul>
         <li className="flex border-[#E7E6EF] border-[1px] h-[30px]">
           <input id="search" type="text" className=" h-[25px] outline-none border-none flex-shrink" />
-          <button className="bg-[#FB2E86] h-[30px] m-0 px-[5px]"><Image src="/imgs/uil_search.png" width={22} height={22} alt="cart" /></button>
+          <button className="bg-[#FB2E86] h-[30px] m-0 px-[5px]"><Image src="/imgs/uil_search.png" width={22} height={22} alt="search" /></button>
         </li>
 
       </div>

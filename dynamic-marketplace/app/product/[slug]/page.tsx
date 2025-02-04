@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import useAuthStore from "@/store/useAuthStore";
 import Loader from "@/components/loader";
 import { client } from "@/sanity/lib/client";
 import { Josefin_Sans } from "next/font/google";
@@ -33,6 +34,8 @@ interface Product {
 interface RelatedProduct extends Omit<Product, "category"> { }
 
 export default function ProductDetail() {
+
+
   const params = useParams(); // Access params dynamically
   const slug = params.slug;// Unwrap the promise of `params`
 
@@ -43,6 +46,7 @@ export default function ProductDetail() {
   const { addToCart } = useCartStore();
   const router = useRouter();
 
+  const { isLogin } = useAuthStore();
   // Fetch product and related products
   useEffect(() => {
     const fetchProductData = async () => {
@@ -80,7 +84,8 @@ export default function ProductDetail() {
   }, [slug, router]);
 
   const handleAddToCart = () => {
-    if (product) {
+
+    if (product && isLogin) {
       addToCart(
         {
           id: product.id,
@@ -97,7 +102,9 @@ export default function ProductDetail() {
       );
       toast.success("Product added to cart");
     } else {
+
       toast.error("Product not added to cart");
+      router.push('/login')
     }
     setQuantity(1);
   };
@@ -106,6 +113,7 @@ export default function ProductDetail() {
   if (!product) {
     return <Loader />; // Show a loading state while fetching
   }
+
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
     if (newQuantity >= 1) {
@@ -167,8 +175,8 @@ export default function ProductDetail() {
                   -
                 </button>
                 <span className="px-4 py-2">{quantity}</span>
-                <button disabled={quantity > product.stockLevel -1 } onClick={() => handleQuantityChange(1)} className="px-4 py-2 hover:bg-gray-100"                   
->
+                <button disabled={quantity > product.stockLevel - 1} onClick={() => handleQuantityChange(1)} className="px-4 py-2 hover:bg-gray-100"
+                >
                   +
                 </button>
               </div>

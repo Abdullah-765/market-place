@@ -116,7 +116,7 @@ export default function ProductsList() {
           </li>
         </ul>
         {isGrid &&
-          <ul className="grid grid-cols-2 gap-[15px] mt-[20px] lg:grid-cols-4">
+          <ul className="grid gap-[15px] mt-[20px] lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
             {data.map((product: productsDataProps) => (
               <Link href={`/product/${product.slug.current}`} key={product.id}>
                 <li className="flex items-center p-[17px] h-[250px] justify-center flex-col border border-gray-100">

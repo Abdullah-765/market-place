@@ -32,7 +32,7 @@ export default function ShopCart() {
       </div>
 
 
-      <div className="container items-center justify-center mx-auto flex flex-col bg-white p-6 rounded-lg mt-[40px] lg:flex-row ">
+      <div className="container items-center justify-center mx-[20px] flex flex-col bg-white p-6 rounded-lg mt-[40px] lg:flex-row ">
         {cart.length > 0 && (
           <div className="flex flex-col gap-[60px] lg:flex-row">
             <div className="main-container-table">

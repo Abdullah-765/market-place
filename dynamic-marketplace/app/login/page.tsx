@@ -117,16 +117,20 @@ const josefinSans = Josefin_Sans({
 });
 
 const LoginForm = () => {
+  const validEmail = "abc@gmail.com";
+  const validPassword = "12345";
+  
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(validEmail);
+  const [password, setPassword] = useState("12345");
   const { login, isLogin, logout } = useAuthStore();
 
   // Hardcoded credentials for testing
-  const validEmail = "abc@gmail.com";
-  const validPassword = "12345";
+
 
   const handleLogin = () => {
+    alert("This is a hard coded email & password to simulate how the login system will work (i am working on apis) :)")
+    
     if (email === validEmail && password === validPassword) {
       login(); // Update Zustand state
       toast.success("Logged in successfully")
@@ -140,6 +144,8 @@ const LoginForm = () => {
   useEffect(() => {
     console.log("isLogin updated:", isLogin);
   }, [isLogin]); // Runs whenever `isLogin` changes
+
+
 
 
   return (
